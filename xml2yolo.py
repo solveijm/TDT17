@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import glob
 import os
 import json
+import cv2
 
 # Inspired by: https://towardsdatascience.com/convert-pascal-voc-xml-to-yolo-for-object-detection-f969811ccba5
 
@@ -69,3 +70,29 @@ def xml_to_yolo(input_dir, output_dir, image_dir, classes):
     # generate the classes file as reference
     with open('classes.txt', 'w', encoding='utf8') as f:
         f.write(json.dumps(classes))
+
+
+def formate_output(input_dir, output_file, image_dir):
+    files = glob.glob(os.path.join(input_dir, '*.txt'))
+
+    for file in files:
+        basename = os.path.basename(file)
+        filename = os.path.splitext(basename)[0]
+        # check if the label contains the corresponding image file
+        if not os.path.exists(os.path.join(image_dir, f"{filename}.jpg")):
+            print(f"{filename} image does not exist!")
+            continue
+        image = cv2.imread(os.path.join(image_dir, f"{filename}.jpg"))
+        height, width = image.shape[:2]
+        result = []
+        with open(file, 'r') as f1:
+            lines = f1.readlines()
+            for line in lines:
+                elms = line.split(' ')
+                result.append(elms[0])
+                bb = yolo_to_xml_bbox([float(x) for x in elms[1:]], width, height)
+                for el in bb:
+                    result.append(el)
+        with open(output_file, 'a+') as f2:
+            f2.write(filename + " ")
+            f2.write(" ".join(str(x) for x in result) + "\n")   
