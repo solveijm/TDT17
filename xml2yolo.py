@@ -20,10 +20,10 @@ def yolo_to_xml_bbox(bbox, w, h):
     # x_center, y_center width heigth
     w_half_len = (bbox[2] * w) / 2
     h_half_len = (bbox[3] * h) / 2
-    xmin = int((bbox[0] * w) - w_half_len)
-    ymin = int((bbox[1] * h) - h_half_len)
-    xmax = int((bbox[0] * w) + w_half_len)
-    ymax = int((bbox[1] * h) + h_half_len)
+    xmin = float((bbox[0] * w) - w_half_len)
+    ymin = float((bbox[1] * h) - h_half_len)
+    xmax = float((bbox[0] * w) + w_half_len)
+    ymax = float((bbox[1] * h) + h_half_len)
     return [xmin, ymin, xmax, ymax]
 
 
@@ -56,7 +56,7 @@ def xml_to_yolo(input_dir, output_dir, image_dir, classes):
             if label not in classes:
                 continue
             index = classes.index(label)
-            pil_bbox = [int(x.text) for x in obj.find("bndbox")]
+            pil_bbox = [float(x.text) for x in obj.find("bndbox")]
             yolo_bbox = xml_to_yolo_bbox(pil_bbox, width, height)
             # convert data to string
             bbox_string = " ".join([str(x) for x in yolo_bbox])
