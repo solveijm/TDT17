@@ -1,7 +1,7 @@
 #!/bin/sh
-#SBATCH --partition=short
+#SBATCH --partition=GPUQ
 #SBATCH --account=ie-idi
-#SBATCH --time=00:15:00
+#SBATCH --time=1:00:00
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH --job-name="crack_detection"
@@ -22,4 +22,4 @@ echo "Total of $SLURM_NTASKS cores"
 
 module purge
 module load PyTorch/1.7.1-fosscuda-2020b
-python /path/to/file.py
+python ./yolov5_train.py
