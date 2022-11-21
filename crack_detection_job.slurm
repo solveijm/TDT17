@@ -3,7 +3,7 @@
 #SBATCH --account=ie-idi
 #SBATCH --time=30:00:00
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:V10032:1
 #SBATCH --job-name="crack_detection"
 #SBATCH --output=test-srun.out
 #SBATCH --mail-user=andrsje@stud.ntnu.no
@@ -21,5 +21,6 @@ echo "We are using $SLURM_CPUS_ON_NODE cores per node"
 echo "Total of $SLURM_NTASKS cores"
 
 module purge
-module load PyTorch/1.8.1-fosscuda-2020b
-python ./yolov5_train.py
+module load Anaconda3/2020.07
+source activate myenv
+python ./yolov5/train.py --img 640 --batch 32 --epochs 100 --data dataset.yaml --weights yolov5x.pt --device 0
