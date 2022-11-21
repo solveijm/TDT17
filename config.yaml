@@ -2,7 +2,7 @@ split:
   train: 0.8
   val: 0.2
 
-dataset_src_dir: ./cluster/projects/vc/courses/TDT17/2022/open/RDD2022
+dataset_src_dir: /cluster/projects/vc/courses/TDT17/2022/open/RDD2022
 
 countries:
   0: China_Drone
