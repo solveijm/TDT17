@@ -15,10 +15,10 @@ def draw_images(image_file, image_folder, annotation_folder):
     for obj in root.iter('object'):
         cls_name = obj.find('name').text
         xmlbox = obj.find('bndbox')
-        xmin = int(xmlbox.find('xmin').text)
-        xmax = int(xmlbox.find('xmax').text)
-        ymin = int(xmlbox.find('ymin').text)
-        ymax = int(xmlbox.find('ymax').text)
+        xmin = float(xmlbox.find('xmin').text)
+        xmax = float(xmlbox.find('xmax').text)
+        ymin = float(xmlbox.find('ymin').text)
+        ymax = float(xmlbox.find('ymax').text)
 
         font = cv2.FONT_HERSHEY_SIMPLEX
 

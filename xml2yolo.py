@@ -115,5 +115,68 @@ def formate_output(input_dir, output_file, image_dir):
                 sorted_results.append(result[indices[i]])
             result = sorted_results
         with open(output_file, 'a+') as f2:
-            f2.write(filename + ",")
+            f2.write(filename + ".jpg,")
             f2.write(" ".join(str(x) for y in result for x in y) + "\n")  
+    
+    reformat_annot(output_file)
+
+
+def reformat_annot(path):
+    # Find ids
+    ids = []
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            print(line)
+            ide = line.strip('Norway_').strip('\n')
+            id = ide.split(',')[0]
+            i = id.split('.')[0]
+            ids.append(int(i))
+    # Find missing images which are images w0 lables
+    add_me = []
+    for i in range(8161, 10201):
+        if not i in ids:
+            add_me.append(i)
+    
+    # Make new list
+    new_list = ['Norway_0'+str(i)+'.jpg,' if i>9999 else 'Norway_00'+str(i)+'.jpg,' for i in add_me]
+
+    # Add images
+    with open(path, 'a+') as f:
+        f.write('\n')
+        for id in new_list:
+            f.write(id +'\n')
+    
+    all_ids = []
+    all_line = []
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            all_line.append(line)
+            ide = line.strip('Norway_').strip('\n')
+            id = ide.split(',')[0]
+            i = id.split('.')[0]
+            all_ids.append(int(i))
+
+    indices = sorted(range(len(all_ids)), key=lambda k: all_ids[k])
+    sorted_lines = [all_line[i] for i in indices]
+
+    with open(path, 'w+') as f:
+        for line in sorted_lines:
+            f.write(line)
+    
+    all_lines = []
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            print(line)
+            elms = line.strip('\n').split(',')
+            full_str = elms[0]+','+'\n'
+            if elms[1]!='':
+                elms2 = elms[1].split(' ')
+                print(elms2)
+                integer = [str(int(float(x))) for x in elms2]
+                int_str = ' '.join(integer)
+                full_str = elms[0] + ',' + int_str +'\n'
+            all_lines.append(full_str)
+    
+    with open(path, 'w+') as f:
+        for line in all_lines:
+            f.write(line)
