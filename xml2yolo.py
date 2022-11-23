@@ -73,8 +73,19 @@ def xml_to_yolo(input_dir, output_dir, image_dir, classes):
 
 
 def formate_output(input_dir, output_file, image_dir):
+    """For each image in the test dataset, your algorithm needs to predict a list of labels, and the corresponding bounding boxes. The output is expected to contain the following two columns:
+
+    ImageId: the id of the test image, for example, India_00001
+    PredictionString: the prediction string should be space-delimited of 5 integers. 
+    For example, 2 240 170 260 240 means it's label 2, with a bounding box of coordinates 
+    (x_min, y_min, x_max, y_max). We accept up to 5 predictions. For example, 
+    if you submit 3 42 24 170 186 1 292 28 430 198 4 168 24 292 190 5 299 238 443 374 2 160 195 294 357 6 1 224 135 356 which contains 6 bounding boxes, we will only take the first 5 into consideration."""
+
     files = glob.glob(os.path.join(input_dir, '*.txt'))
 
+    number_to_correct_number_dict = {'0': 2, '1': 4, '2':1, '3':3}
+    #if not os.path.exists(output_file):
+    #    os.mkdir(output_file)
     for file in files:
         basename = os.path.basename(file)
         filename = os.path.splitext(basename)[0]
@@ -85,14 +96,24 @@ def formate_output(input_dir, output_file, image_dir):
         image = cv2.imread(os.path.join(image_dir, f"{filename}.jpg"))
         height, width = image.shape[:2]
         result = []
+        confidence = []
         with open(file, 'r') as f1:
             lines = f1.readlines()
             for line in lines:
-                elms = line.split(' ')
-                result.append(elms[0])
-                bb = yolo_to_xml_bbox([float(x) for x in elms[1:]], width, height)
+                bb_result = []
+                elms = line.strip('\n').split(' ')
+                bb_result.append(number_to_correct_number_dict[str(elms[0])])
+                bb = yolo_to_xml_bbox([float(x) for x in elms[1:-1]], width, height)
                 for el in bb:
-                    result.append(el)
+                    bb_result.append(el)
+                result.append(bb_result)
+                confidence.append(elms[-1])
+        if len(result) > 5:
+            indices = sorted(range(len(confidence)), key=lambda k: confidence[k])
+            sorted_results = []
+            for i in range(5):
+                sorted_results.append(result[indices[i]])
+            result = sorted_results
         with open(output_file, 'a+') as f2:
             f2.write(filename + " ")
-            f2.write(" ".join(str(x) for x in result) + "\n")   
+            f2.write(" ".join(str(x) for y in result for x in y) + "\n")   
