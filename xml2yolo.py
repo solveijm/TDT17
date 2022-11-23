@@ -94,5 +94,5 @@ def formate_output(input_dir, output_file, image_dir):
                 for el in bb:
                     result.append(el)
         with open(output_file, 'a+') as f2:
-            f2.write(filename + " ")
+            f2.write(filename + ",")
             f2.write(" ".join(str(x) for x in result) + "\n")   
