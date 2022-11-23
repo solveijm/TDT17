@@ -1,6 +1,9 @@
 import cv2
 from xml.etree import ElementTree
 import os
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import glob
 
 def draw_images(image_file, image_folder, annotation_folder):
 
@@ -25,3 +28,15 @@ def draw_images(image_file, image_folder, annotation_folder):
         # draw bounding box
         cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0,255,0),3)
     return img
+
+def show_images_wo_annot(path, figsize=(20,10), columns=5):
+    images = []
+    for img_path in glob.glob(path + '/*.jpg'):
+        images.append(mpimg.imread(img_path))
+
+    plt.figure(figsize=figsize)
+    columns = columns
+    for i, image in enumerate(images):
+        plt.subplot((int(len(images) / columns + 1)), columns, i + 1)
+        plt.tick_params(left = False, right = False , labelleft = False, labelbottom = False, bottom = False)
+        plt.imshow(image)
