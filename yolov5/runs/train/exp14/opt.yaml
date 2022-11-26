@@ -1,4 +1,4 @@
-weights: yolov5s.pt
+weights: yolov5/runs/train/exp14/weights/last.pt
 cfg: ''
 data: dataset.yaml
 hyp:
@@ -34,7 +34,7 @@ epochs: 50
 batch_size: 16
 imgsz: 640
 rect: false
-resume: false
+resume: true
 nosave: false
 noval: false
 noautoanchor: false
