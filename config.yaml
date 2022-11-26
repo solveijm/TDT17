@@ -1,0 +1,16 @@
+split:
+  train: 0.8
+  val: 0.2
+
+dataset_src_dir: /cluster/projects/vc/courses/TDT17/2022/open/RDD2022
+
+countries:
+  0: China_Drone
+  1: China_MotorBike
+  2: Czech
+  3: India
+  4: Japan
+  5: Norway
+  6: United_States
+
+
